@@ -3,6 +3,7 @@ const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose'); // 1. Import Mongoose
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -47,7 +48,10 @@ app.get('/messages', async (req, res) => {
         res.status(500).json(err);
     }
 });
-
+app.use(express.static(path.join(__dirname, 'dist')));
+app.get('/{*splat}', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 // 5. Socket.io Logic
 io.on('connection', (socket) => {
     console.log(`🟢 A user connected: ${socket.id}`);
